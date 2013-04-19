@@ -39,6 +39,7 @@ static char UIViewKeyboardActiveView;
 static char UIViewKeyboardPanRecognizer;
 static char UIViewPreviousKeyboardRect;
 static char UIViewIsPanning;
+static char UIViewKeyboardFrame;
 
 @interface UIView (DAKeyboardControl_Internal) <UIGestureRecognizerDelegate>
 
@@ -48,6 +49,7 @@ static char UIViewIsPanning;
 @property (nonatomic, strong) UIPanGestureRecognizer *keyboardPanRecognizer;
 @property (nonatomic) CGRect previousKeyboardRect;
 @property (nonatomic, getter = isPanning) BOOL panning;
+@property (nonatomic) CGRect keyboardFrame;
 
 @end
 
@@ -138,10 +140,15 @@ static char UIViewIsPanning;
                                               fromView:self.keyboardActiveView.window];
         return keyboardFrameInView;
     }
+    else if (!CGRectIsNull(self.keyboardFrame))
+    {
+        return [self convertRect:self.keyboardFrame
+                        fromView:nil];
+    }
     else
     {
         CGRect keyboardFrameInView = CGRectMake(0.0f,
-                                                [[UIScreen mainScreen] bounds].size.height,
+                                                MAX([[UIScreen mainScreen] bounds].size.height, [[UIScreen mainScreen] bounds].size.width),
                                                 0.0f,
                                                 0.0f);
         return keyboardFrameInView;
@@ -258,6 +265,8 @@ static char UIViewIsPanning;
                              [self addGestureRecognizer:self.keyboardPanRecognizer];
                          }
                      }];
+    
+    self.keyboardFrame = keyboardEndFrameWindow;
 }
 
 - (void)inputKeyboardDidShow:(NSNotification *)notification
@@ -296,6 +305,8 @@ static char UIViewIsPanning;
                      }
                      completion:^(BOOL finished){
                      }];
+    
+    self.keyboardFrame = keyboardEndFrameWindow;
 }
 
 - (void)inputKeyboardDidChangeFrame:(NSNotification *)notification
@@ -327,6 +338,8 @@ static char UIViewIsPanning;
                          // Remove gesture recognizer when keyboard is not showing
                          [self removeGestureRecognizer:self.keyboardPanRecognizer];
                      }];
+    
+    self.keyboardFrame = keyboardEndFrameWindow;
 }
 
 - (void)inputKeyboardDidHide:(NSNotification *)notification
@@ -334,6 +347,8 @@ static char UIViewIsPanning;
     self.keyboardActiveView.hidden = NO;
     self.keyboardActiveView.userInteractionEnabled = YES;
     self.keyboardActiveView = nil;
+    
+    self.keyboardFrame = CGRectNull;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -352,6 +367,8 @@ static char UIViewIsPanning;
             self.keyboardDidMoveBlock(keyboardEndFrameView);
 
         self.previousKeyboardRect = keyboardEndFrameView;
+        
+        self.keyboardFrame = keyboardEndFrameWindow;
     }
 }
 
@@ -596,7 +613,7 @@ static char UIViewIsPanning;
 - (BOOL)isPanning
 {
     NSNumber *isPanningNumber = objc_getAssociatedObject(self,
-                                                                     &UIViewIsPanning);
+                                                         &UIViewIsPanning);
     return [isPanningNumber boolValue];
 }
 
@@ -608,6 +625,23 @@ static char UIViewIsPanning;
                              @(panning),
                              OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self didChangeValueForKey:@"panning"];
+}
+
+- (CGRect)keyboardFrame
+{
+    NSValue *keyboardFrameValue = objc_getAssociatedObject(self,
+                                                           &UIViewKeyboardFrame);
+    return (keyboardFrameValue != nil) ? [keyboardFrameValue CGRectValue] : CGRectNull;
+}
+
+- (void)setKeyboardFrame:(CGRect)keyboardFrame
+{
+    [self willChangeValueForKey:@"keyboardFrame"];
+    objc_setAssociatedObject(self,
+                             &UIViewKeyboardFrame,
+                             [NSValue valueWithCGRect:keyboardFrame],
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self didChangeValueForKey:@"keyboardFrame"];
 }
 
 - (UIResponder *)keyboardActiveInput
