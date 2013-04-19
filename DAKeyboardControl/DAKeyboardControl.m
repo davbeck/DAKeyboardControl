@@ -595,9 +595,9 @@ static char UIViewIsPanning;
 
 - (BOOL)isPanning
 {
-    NSNumber *keyboardTriggerOffsetNumber = objc_getAssociatedObject(self,
+    NSNumber *isPanningNumber = objc_getAssociatedObject(self,
                                                                      &UIViewIsPanning);
-    return [keyboardTriggerOffsetNumber boolValue];
+    return [isPanningNumber boolValue];
 }
 
 - (void)setPanning:(BOOL)panning
