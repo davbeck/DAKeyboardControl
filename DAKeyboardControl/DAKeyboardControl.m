@@ -140,18 +140,10 @@ static char UIViewKeyboardFrame;
                                               fromView:self.keyboardActiveView.window];
         return keyboardFrameInView;
     }
-    else if (!CGRectIsNull(self.keyboardFrame))
+    else
     {
         return [self convertRect:self.keyboardFrame
                         fromView:nil];
-    }
-    else
-    {
-        CGRect keyboardFrameInView = CGRectMake(0.0f,
-                                                MAX([[UIScreen mainScreen] bounds].size.height, [[UIScreen mainScreen] bounds].size.width),
-                                                0.0f,
-                                                0.0f);
-        return keyboardFrameInView;
     }
 }
 
@@ -630,7 +622,10 @@ static char UIViewKeyboardFrame;
 {
     NSValue *keyboardFrameValue = objc_getAssociatedObject(self,
                                                            &UIViewKeyboardFrame);
-    return (keyboardFrameValue != nil) ? [keyboardFrameValue CGRectValue] : CGRectNull;
+    return (keyboardFrameValue != nil) ? [keyboardFrameValue CGRectValue] : CGRectMake(0.0f,
+                                                                                       MAX([[UIScreen mainScreen] bounds].size.height, [[UIScreen mainScreen] bounds].size.width),
+                                                                                       0.0f,
+                                                                                       0.0f);
 }
 
 - (void)setKeyboardFrame:(CGRect)keyboardFrame
