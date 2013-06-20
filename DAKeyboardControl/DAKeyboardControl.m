@@ -108,7 +108,7 @@ static char UIViewKeyboardFrame;
                                                  name:UIKeyboardWillShowNotification
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(inputKeyboardDidShow:)
+                                             selector:@selector(inputKeyboardDidShow)
                                                  name:UIKeyboardDidShowNotification
                                                object:nil];
     
@@ -118,7 +118,7 @@ static char UIViewKeyboardFrame;
                                                  name:@"UIKeyboardWillChangeFrameNotification"
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(inputKeyboardDidChangeFrame:)
+                                             selector:@selector(inputKeyboardDidChangeFrame)
                                                  name:@"UIKeyboardDidChangeFrameNotification"
                                                object:nil];
     
@@ -127,7 +127,7 @@ static char UIViewKeyboardFrame;
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(inputKeyboardDidHide:)
+                                             selector:@selector(inputKeyboardDidHide)
                                                  name:UIKeyboardDidHideNotification
                                                object:nil];
 }
@@ -225,7 +225,7 @@ static char UIViewKeyboardFrame;
         }
         self.keyboardActiveInput = (UIResponder *)textField;
         // Force the keyboard active view reset
-        [self inputKeyboardDidShow:nil];
+        [self inputKeyboardDidShow];
     }
 }
 
@@ -253,8 +253,8 @@ static char UIViewKeyboardFrame;
                          if (self.keyboardDidMoveBlock && !CGRectIsNull(keyboardEndFrameView))
                              self.keyboardDidMoveBlock(keyboardEndFrameView);
                      }
-                     completion:^(BOOL finished){
-                         if (self.panning)
+                     completion:^(__unused BOOL finished){
+                         if (self.panning && !self.keyboardPanRecognizer)
                          {
                              // Register for gesture recognizer calls
                              self.keyboardPanRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self
@@ -269,7 +269,7 @@ static char UIViewKeyboardFrame;
     self.keyboardFrame = keyboardEndFrameWindow;
 }
 
-- (void)inputKeyboardDidShow:(NSNotification *)notification
+- (void)inputKeyboardDidShow
 {
     // Grab the keyboard view
     self.keyboardActiveView = self.keyboardActiveInput.inputAccessoryView.superview;
@@ -303,13 +303,12 @@ static char UIViewKeyboardFrame;
                          if (self.keyboardDidMoveBlock && !CGRectIsNull(keyboardEndFrameView))
                              self.keyboardDidMoveBlock(keyboardEndFrameView);
                      }
-                     completion:^(BOOL finished){
-                     }];
+                     completion:nil];
     
     self.keyboardFrame = keyboardEndFrameWindow;
 }
 
-- (void)inputKeyboardDidChangeFrame:(NSNotification *)notification
+- (void)inputKeyboardDidChangeFrame
 {
     // Nothing to see here
 }
@@ -334,15 +333,16 @@ static char UIViewKeyboardFrame;
                          if (self.keyboardDidMoveBlock && !CGRectIsNull(keyboardEndFrameView))
                              self.keyboardDidMoveBlock(keyboardEndFrameView);
                      }
-                     completion:^(BOOL finished){
+                     completion:^(__unused BOOL finished){
                          // Remove gesture recognizer when keyboard is not showing
                          [self removeGestureRecognizer:self.keyboardPanRecognizer];
+                         self.keyboardPanRecognizer = nil;
                      }];
     
     self.keyboardFrame = keyboardEndFrameWindow;
 }
 
-- (void)inputKeyboardDidHide:(NSNotification *)notification
+- (void)inputKeyboardDidHide
 {
     self.keyboardActiveView.hidden = NO;
     self.keyboardActiveView.userInteractionEnabled = YES;
@@ -353,8 +353,8 @@ static char UIViewKeyboardFrame;
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
                       ofObject:(id)object
-                        change:(NSDictionary *)change
-                       context:(void *)context
+                        change:(__unused NSDictionary *)change
+                       context:(__unused void *)context
 {
     if([keyPath isEqualToString:@"frame"] && object == self.keyboardActiveView)
     {
@@ -457,8 +457,7 @@ static char UIViewKeyboardFrame;
                                          self.keyboardDidMoveBlock(newKeyboardViewFrameInView);
                                      */
                                  }
-                                 completion:^(BOOL finished){
-                                 }];
+                                 completion:nil];
             }
         }
             break;
@@ -491,7 +490,7 @@ static char UIViewKeyboardFrame;
                                      self.keyboardDidMoveBlock(newKeyboardViewFrameInView);
                                  */
                              }
-                             completion:^(BOOL finished){
+                             completion:^(__unused BOOL finished){
                                  [[self keyboardActiveView] setUserInteractionEnabled:!shouldRecede];
                                  if (shouldRecede)
                                  {
@@ -612,9 +611,9 @@ static char UIViewKeyboardFrame;
 
 - (BOOL)isPanning
 {
-    NSNumber *isPanningNumber = objc_getAssociatedObject(self,
-                                                         &UIViewIsPanning);
-    return [isPanningNumber boolValue];
+        NSNumber *keyboardTriggerOffsetNumber = objc_getAssociatedObject(self,
+                                                                         &UIViewIsPanning);
+        return [keyboardTriggerOffsetNumber boolValue];
 }
 
 - (void)setPanning:(BOOL)panning
