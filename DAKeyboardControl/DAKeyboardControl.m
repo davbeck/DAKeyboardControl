@@ -253,25 +253,49 @@ static char UIViewKeyboardFrame;
     
     CGRect keyboardEndFrameView = [self convertRect:keyboardEndFrameWindow fromView:nil];
     
-    [UIView animateWithDuration:keyboardTransitionDuration
-                          delay:0.0f
-                        options:AnimationOptionsForCurve(keyboardTransitionAnimationCurve) | UIViewAnimationOptionBeginFromCurrentState
-                     animations:^{
-                         if (self.keyboardDidMoveBlock && !CGRectIsNull(keyboardEndFrameView))
-                             self.keyboardDidMoveBlock(keyboardEndFrameView);
-                     }
-                     completion:^(__unused BOOL finished){
-                         if (self.panning && !self.keyboardPanRecognizer)
-                         {
-                             // Register for gesture recognizer calls
-                             self.keyboardPanRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self
-                                                                                                  action:@selector(panGestureDidChange:)];
-                             [self.keyboardPanRecognizer setMinimumNumberOfTouches:1];
-                             [self.keyboardPanRecognizer setDelegate:self];
-                             [self.keyboardPanRecognizer setCancelsTouchesInView:NO];
-                             [self addGestureRecognizer:self.keyboardPanRecognizer];
+    if ([UIView respondsToSelector:@selector(animateWithDuration:delay:usingSpringWithDamping:initialSpringVelocity:options:animations:completion:)]) {
+        [UIView animateWithDuration:0.5
+                              delay:0
+             usingSpringWithDamping:500.0f
+              initialSpringVelocity:0.0f
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:^{
+                             if (self.keyboardDidMoveBlock && !CGRectIsNull(keyboardEndFrameView))
+                                 self.keyboardDidMoveBlock(keyboardEndFrameView);
                          }
-                     }];
+                         completion:^(__unused BOOL finished){
+                             if (self.panning && !self.keyboardPanRecognizer)
+                             {
+                                 // Register for gesture recognizer calls
+                                 self.keyboardPanRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self
+                                                                                                      action:@selector(panGestureDidChange:)];
+                                 [self.keyboardPanRecognizer setMinimumNumberOfTouches:1];
+                                 [self.keyboardPanRecognizer setDelegate:self];
+                                 [self.keyboardPanRecognizer setCancelsTouchesInView:NO];
+                                 [self addGestureRecognizer:self.keyboardPanRecognizer];
+                             }
+                         }];
+    } else {
+        [UIView animateWithDuration:keyboardTransitionDuration
+                              delay:0.0f
+                            options:AnimationOptionsForCurve(keyboardTransitionAnimationCurve) | UIViewAnimationOptionBeginFromCurrentState
+                         animations:^{
+                             if (self.keyboardDidMoveBlock && !CGRectIsNull(keyboardEndFrameView))
+                                 self.keyboardDidMoveBlock(keyboardEndFrameView);
+                         }
+                         completion:^(__unused BOOL finished){
+                             if (self.panning && !self.keyboardPanRecognizer)
+                             {
+                                 // Register for gesture recognizer calls
+                                 self.keyboardPanRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self
+                                                                                                      action:@selector(panGestureDidChange:)];
+                                 [self.keyboardPanRecognizer setMinimumNumberOfTouches:1];
+                                 [self.keyboardPanRecognizer setDelegate:self];
+                                 [self.keyboardPanRecognizer setCancelsTouchesInView:NO];
+                                 [self addGestureRecognizer:self.keyboardPanRecognizer];
+                             }
+                         }];
+    }
     
     self.keyboardFrame = keyboardEndFrameWindow;
 }
@@ -303,14 +327,27 @@ static char UIViewKeyboardFrame;
     
     CGRect keyboardEndFrameView = [self convertRect:keyboardEndFrameWindow fromView:nil];
     
-    [UIView animateWithDuration:keyboardTransitionDuration
-                          delay:0.0f
-                        options:AnimationOptionsForCurve(keyboardTransitionAnimationCurve) | UIViewAnimationOptionBeginFromCurrentState
-                     animations:^{
-                         if (self.keyboardDidMoveBlock && !CGRectIsNull(keyboardEndFrameView))
-                             self.keyboardDidMoveBlock(keyboardEndFrameView);
-                     }
-                     completion:nil];
+    if ([UIView respondsToSelector:@selector(animateWithDuration:delay:usingSpringWithDamping:initialSpringVelocity:options:animations:completion:)]) {
+        [UIView animateWithDuration:0.5
+                              delay:0
+             usingSpringWithDamping:500.0f
+              initialSpringVelocity:0.0f
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:^{
+                             if (self.keyboardDidMoveBlock && !CGRectIsNull(keyboardEndFrameView))
+                                 self.keyboardDidMoveBlock(keyboardEndFrameView);
+                         }
+                         completion:nil];
+    } else {
+        [UIView animateWithDuration:keyboardTransitionDuration
+                              delay:0.0f
+                            options:AnimationOptionsForCurve(keyboardTransitionAnimationCurve) | UIViewAnimationOptionBeginFromCurrentState
+                         animations:^{
+                             if (self.keyboardDidMoveBlock && !CGRectIsNull(keyboardEndFrameView))
+                                 self.keyboardDidMoveBlock(keyboardEndFrameView);
+                         }
+                         completion:nil];
+    }
     
     self.keyboardFrame = keyboardEndFrameWindow;
 }
@@ -333,18 +370,35 @@ static char UIViewKeyboardFrame;
     
     CGRect keyboardEndFrameView = [self convertRect:keyboardEndFrameWindow fromView:nil];
     
-    [UIView animateWithDuration:keyboardTransitionDuration
-                          delay:0.0f
-                        options:AnimationOptionsForCurve(keyboardTransitionAnimationCurve) | UIViewAnimationOptionBeginFromCurrentState
-                     animations:^{
-                         if (self.keyboardDidMoveBlock && !CGRectIsNull(keyboardEndFrameView))
-                             self.keyboardDidMoveBlock(keyboardEndFrameView);
-                     }
-                     completion:^(__unused BOOL finished){
-                         // Remove gesture recognizer when keyboard is not showing
-                         [self removeGestureRecognizer:self.keyboardPanRecognizer];
-                         self.keyboardPanRecognizer = nil;
-                     }];
+    if ([UIView respondsToSelector:@selector(animateWithDuration:delay:usingSpringWithDamping:initialSpringVelocity:options:animations:completion:)]) {
+        [UIView animateWithDuration:0.5
+                              delay:0
+             usingSpringWithDamping:500.0f
+              initialSpringVelocity:0.0f
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:^{
+                             if (self.keyboardDidMoveBlock && !CGRectIsNull(keyboardEndFrameView))
+                                 self.keyboardDidMoveBlock(keyboardEndFrameView);
+                         }
+                         completion:^(__unused BOOL finished){
+                             // Remove gesture recognizer when keyboard is not showing
+                             [self removeGestureRecognizer:self.keyboardPanRecognizer];
+                             self.keyboardPanRecognizer = nil;
+                         }];
+    } else {
+        [UIView animateWithDuration:keyboardTransitionDuration
+                              delay:0.0f
+                            options:AnimationOptionsForCurve(keyboardTransitionAnimationCurve) | UIViewAnimationOptionBeginFromCurrentState
+                         animations:^{
+                             if (self.keyboardDidMoveBlock && !CGRectIsNull(keyboardEndFrameView))
+                                 self.keyboardDidMoveBlock(keyboardEndFrameView);
+                         }
+                         completion:^(__unused BOOL finished){
+                             // Remove gesture recognizer when keyboard is not showing
+                             [self removeGestureRecognizer:self.keyboardPanRecognizer];
+                             self.keyboardPanRecognizer = nil;
+                         }];
+    }
     
     self.keyboardFrame = keyboardEndFrameWindow;
 }
@@ -367,12 +421,12 @@ static char UIViewKeyboardFrame;
     {
         CGRect keyboardEndFrameWindow = [[object valueForKeyPath:keyPath] CGRectValue];
         CGRect keyboardEndFrameView = [self convertRect:keyboardEndFrameWindow fromView:self.keyboardActiveView.window];
-
+        
         if (CGRectEqualToRect(keyboardEndFrameView, self.previousKeyboardRect)) return;
-
+        
         if (self.keyboardDidMoveBlock && !self.keyboardActiveView.hidden&& !CGRectIsNull(keyboardEndFrameView))
             self.keyboardDidMoveBlock(keyboardEndFrameView);
-
+        
         self.previousKeyboardRect = keyboardEndFrameView;
         
         self.keyboardFrame = keyboardEndFrameWindow;
@@ -451,20 +505,38 @@ static char UIViewKeyboardFrame;
             
             // Only update if the frame has actually changed
             if (newKeyboardViewFrame.origin.y != self.keyboardActiveView.frame.origin.y)
-            {                
-                [UIView animateWithDuration:0.0f
-                                      delay:0.0f
-                                    options:UIViewAnimationOptionTransitionNone | UIViewAnimationOptionBeginFromCurrentState
-                                 animations:^{
-                                     [self.keyboardActiveView setFrame:newKeyboardViewFrame];
-                                     /* Unnecessary now, due to KVO on self.keyboardActiveView
-                                     CGRect newKeyboardViewFrameInView = [self convertRect:newKeyboardViewFrame
-                                                                                  fromView:self.keyboardActiveView.window];
-                                     if (self.keyboardDidMoveBlock)
-                                         self.keyboardDidMoveBlock(newKeyboardViewFrameInView);
-                                     */
-                                 }
-                                 completion:nil];
+            {
+                if ([UIView respondsToSelector:@selector(animateWithDuration:delay:usingSpringWithDamping:initialSpringVelocity:options:animations:completion:)]) {
+                    [UIView animateWithDuration:0.5
+                                          delay:0
+                         usingSpringWithDamping:500.0f
+                          initialSpringVelocity:0.0f
+                                        options:UIViewAnimationOptionCurveLinear
+                                     animations:^{
+                                         [self.keyboardActiveView setFrame:newKeyboardViewFrame];
+                                         /* Unnecessary now, due to KVO on self.keyboardActiveView
+                                          CGRect newKeyboardViewFrameInView = [self convertRect:newKeyboardViewFrame
+                                          fromView:self.keyboardActiveView.window];
+                                          if (self.keyboardDidMoveBlock)
+                                          self.keyboardDidMoveBlock(newKeyboardViewFrameInView);
+                                          */
+                                     }
+                                     completion:nil];
+                } else {
+                    [UIView animateWithDuration:0.0f
+                                          delay:0.0f
+                                        options:UIViewAnimationOptionTransitionNone | UIViewAnimationOptionBeginFromCurrentState
+                                     animations:^{
+                                         [self.keyboardActiveView setFrame:newKeyboardViewFrame];
+                                         /* Unnecessary now, due to KVO on self.keyboardActiveView
+                                          CGRect newKeyboardViewFrameInView = [self convertRect:newKeyboardViewFrame
+                                          fromView:self.keyboardActiveView.window];
+                                          if (self.keyboardDidMoveBlock)
+                                          self.keyboardDidMoveBlock(newKeyboardViewFrameInView);
+                                          */
+                                     }
+                                     completion:nil];
+                }
             }
         }
             break;
@@ -485,25 +557,49 @@ static char UIViewKeyboardFrame;
             CGRect newKeyboardViewFrame = self.keyboardActiveView.frame;
             newKeyboardViewFrame.origin.y = (!shouldRecede ? keyboardWindowHeight - keyboardViewHeight : keyboardWindowHeight);
             
-            [UIView animateWithDuration:0.25f
-                                  delay:0.0f
-                                options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState
-                             animations:^{
-                                 [self.keyboardActiveView setFrame:newKeyboardViewFrame];
-                                 /* Unnecessary now, due to KVO on self.keyboardActiveView
-                                 CGRect newKeyboardViewFrameInView = [self convertRect:newKeyboardViewFrame
-                                                                              fromView:self.keyboardActiveView.window];
-                                 if (self.keyboardDidMoveBlock)
-                                     self.keyboardDidMoveBlock(newKeyboardViewFrameInView);
-                                 */
-                             }
-                             completion:^(__unused BOOL finished){
-                                 [[self keyboardActiveView] setUserInteractionEnabled:!shouldRecede];
-                                 if (shouldRecede)
-                                 {
-                                     [self hideKeyboard];
+            if ([UIView respondsToSelector:@selector(animateWithDuration:delay:usingSpringWithDamping:initialSpringVelocity:options:animations:completion:)]) {
+                [UIView animateWithDuration:0.5
+                                      delay:0
+                     usingSpringWithDamping:500.0f
+                      initialSpringVelocity:0.0f
+                                    options:UIViewAnimationOptionCurveLinear
+                                 animations:^{
+                                     [self.keyboardActiveView setFrame:newKeyboardViewFrame];
+                                     /* Unnecessary now, due to KVO on self.keyboardActiveView
+                                      CGRect newKeyboardViewFrameInView = [self convertRect:newKeyboardViewFrame
+                                      fromView:self.keyboardActiveView.window];
+                                      if (self.keyboardDidMoveBlock)
+                                      self.keyboardDidMoveBlock(newKeyboardViewFrameInView);
+                                      */
                                  }
-                             }];
+                                 completion:^(__unused BOOL finished){
+                                     [[self keyboardActiveView] setUserInteractionEnabled:!shouldRecede];
+                                     if (shouldRecede)
+                                     {
+                                         [self hideKeyboard];
+                                     }
+                                 }];
+            } else {
+                [UIView animateWithDuration:0.25f
+                                      delay:0.0f
+                                    options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState
+                                 animations:^{
+                                     [self.keyboardActiveView setFrame:newKeyboardViewFrame];
+                                     /* Unnecessary now, due to KVO on self.keyboardActiveView
+                                      CGRect newKeyboardViewFrameInView = [self convertRect:newKeyboardViewFrame
+                                      fromView:self.keyboardActiveView.window];
+                                      if (self.keyboardDidMoveBlock)
+                                      self.keyboardDidMoveBlock(newKeyboardViewFrameInView);
+                                      */
+                                 }
+                                 completion:^(__unused BOOL finished){
+                                     [[self keyboardActiveView] setUserInteractionEnabled:!shouldRecede];
+                                     if (shouldRecede)
+                                     {
+                                         [self hideKeyboard];
+                                     }
+                                 }];
+            }
             
             // Set the max number of touches back to the default
             gesture.maximumNumberOfTouches = NSUIntegerMax;
@@ -570,7 +666,7 @@ static char UIViewKeyboardFrame;
     id previousRectValue = objc_getAssociatedObject(self, &UIViewPreviousKeyboardRect);
     if (previousRectValue)
         return [previousRectValue CGRectValue];
-
+    
     return CGRectZero;
 }
 
@@ -618,9 +714,9 @@ static char UIViewKeyboardFrame;
 
 - (BOOL)isPanning
 {
-        NSNumber *keyboardTriggerOffsetNumber = objc_getAssociatedObject(self,
-                                                                         &UIViewIsPanning);
-        return [keyboardTriggerOffsetNumber boolValue];
+    NSNumber *keyboardTriggerOffsetNumber = objc_getAssociatedObject(self,
+                                                                     &UIViewIsPanning);
+    return [keyboardTriggerOffsetNumber boolValue];
 }
 
 - (void)setPanning:(BOOL)panning
