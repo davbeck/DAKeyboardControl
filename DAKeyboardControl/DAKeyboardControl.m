@@ -258,7 +258,7 @@ static char UIViewKeyboardFrame;
                               delay:0
              usingSpringWithDamping:500.0f
               initialSpringVelocity:0.0f
-                            options:UIViewAnimationOptionCurveLinear
+                            options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState
                          animations:^{
                              if (self.keyboardDidMoveBlock && !CGRectIsNull(keyboardEndFrameView))
                                  self.keyboardDidMoveBlock(keyboardEndFrameView);
@@ -332,7 +332,7 @@ static char UIViewKeyboardFrame;
                               delay:0
              usingSpringWithDamping:500.0f
               initialSpringVelocity:0.0f
-                            options:UIViewAnimationOptionCurveLinear
+                            options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState
                          animations:^{
                              if (self.keyboardDidMoveBlock && !CGRectIsNull(keyboardEndFrameView))
                                  self.keyboardDidMoveBlock(keyboardEndFrameView);
@@ -375,7 +375,7 @@ static char UIViewKeyboardFrame;
                               delay:0
              usingSpringWithDamping:500.0f
               initialSpringVelocity:0.0f
-                            options:UIViewAnimationOptionCurveLinear
+                            options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState
                          animations:^{
                              if (self.keyboardDidMoveBlock && !CGRectIsNull(keyboardEndFrameView))
                                  self.keyboardDidMoveBlock(keyboardEndFrameView);
@@ -511,7 +511,7 @@ static char UIViewKeyboardFrame;
                                           delay:0
                          usingSpringWithDamping:500.0f
                           initialSpringVelocity:0.0f
-                                        options:UIViewAnimationOptionCurveLinear
+                                        options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState
                                      animations:^{
                                          [self.keyboardActiveView setFrame:newKeyboardViewFrame];
                                          /* Unnecessary now, due to KVO on self.keyboardActiveView
@@ -562,7 +562,7 @@ static char UIViewKeyboardFrame;
                                       delay:0
                      usingSpringWithDamping:500.0f
                       initialSpringVelocity:0.0f
-                                    options:UIViewAnimationOptionCurveLinear
+                                    options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState
                                  animations:^{
                                      [self.keyboardActiveView setFrame:newKeyboardViewFrame];
                                      /* Unnecessary now, due to KVO on self.keyboardActiveView
