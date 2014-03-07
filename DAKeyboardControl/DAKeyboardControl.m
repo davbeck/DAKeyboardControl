@@ -41,6 +41,21 @@ static char UIViewPreviousKeyboardRect;
 static char UIViewIsPanning;
 static char UIViewKeyboardFrame;
 
+
+@interface DAWeakWrapper : NSObject
+@property (nonatomic, weak) id object;
++ (instancetype)wrapperWithObject:(id)object;
+@end
+@implementation DAWeakWrapper
++ (instancetype)wrapperWithObject:(id)object
+{
+    DAWeakWrapper *wrapper = [[self alloc] init];
+    wrapper.object = object;
+    return wrapper;
+}
+@end
+
+
 @interface UIView (DAKeyboardControl_Internal) <UIGestureRecognizerDelegate>
 
 @property (nonatomic) DAKeyboardDidMoveBlock keyboardDidMoveBlock;
@@ -744,8 +759,8 @@ static char UIViewKeyboardFrame;
 
 - (UIResponder *)keyboardActiveInput
 {
-    return objc_getAssociatedObject(self,
-                                    &UIViewKeyboardActiveInput);
+    return [objc_getAssociatedObject(self,
+                                     &UIViewKeyboardActiveInput) object];
 }
 
 - (void)setKeyboardActiveInput:(UIResponder *)keyboardActiveInput
@@ -753,8 +768,8 @@ static char UIViewKeyboardFrame;
     [self willChangeValueForKey:@"keyboardActiveInput"];
     objc_setAssociatedObject(self,
                              &UIViewKeyboardActiveInput,
-                             keyboardActiveInput,
-                             OBJC_ASSOCIATION_ASSIGN);
+                             [DAWeakWrapper wrapperWithObject:keyboardActiveInput],
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self didChangeValueForKey:@"keyboardActiveInput"];
 }
 
